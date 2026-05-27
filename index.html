@@ -1,0 +1,669 @@
+Cat > /mnt/user-data/outputs/nebulous_melee.html << 'HTMLEOF'
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nebulous – The Savage Mêlée</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --gold:#FFD700;--silver:#C0C0C0;--bronze:#CD7F32;
+  --bg:#03070f;--cyan:#00e5ff;--pink:#ff2d78;
+  --green:#00ff88;--purple:#a855f7;--red:#ff3b3b;--orange:#ff8c00;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:#e0f0ff;font-family:'Rajdhani',sans-serif;min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;
+  background-image:
+    radial-gradient(1px 1px at 8% 12%,rgba(255,255,255,.6) 0%,transparent 100%),
+    radial-gradient(1px 1px at 22% 55%,rgba(255,255,255,.3) 0%,transparent 100%),
+    radial-gradient(1px 1px at 38% 7%,rgba(255,255,255,.5) 0%,transparent 100%),
+    radial-gradient(1px 1px at 55% 70%,rgba(255,255,255,.3) 0%,transparent 100%),
+    radial-gradient(1px 1px at 72% 30%,rgba(255,255,255,.5) 0%,transparent 100%),
+    radial-gradient(1px 1px at 88% 85%,rgba(255,255,255,.3) 0%,transparent 100%),
+    radial-gradient(2px 2px at 15% 90%,rgba(0,229,255,.4) 0%,transparent 100%),
+    radial-gradient(2px 2px at 78% 45%,rgba(168,85,247,.3) 0%,transparent 100%),
+    radial-gradient(3px 3px at 50% 50%,rgba(255,45,120,.1) 0%,transparent 100%);
+  pointer-events:none;z-index:0;}
+
+.container{position:relative;z-index:1;max-width:920px;margin:0 auto;padding:40px 16px 80px;}
+
+header{text-align:center;margin-bottom:50px;}
+.game-label{font-family:'Orbitron',monospace;font-size:11px;letter-spacing:10px;color:var(--cyan);opacity:.6;text-transform:uppercase;margin-bottom:10px;}
+h1{font-family:'Orbitron',monospace;font-size:clamp(26px,8vw,52px);font-weight:900;
+  background:linear-gradient(135deg,#fff 0%,var(--cyan) 35%,var(--pink) 70%,var(--gold) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  line-height:1.05;letter-spacing:2px;}
+.subtitle{margin-top:10px;font-size:13px;color:rgba(160,200,255,.5);letter-spacing:5px;text-transform:uppercase;}
+
+/* PHASE TITLES */
+.phase-block{margin:44px 0 20px;}
+.phase-title{
+  font-family:'Orbitron',monospace;font-weight:900;
+  font-size:clamp(15px,4vw,21px);letter-spacing:3px;text-transform:uppercase;
+  padding-bottom:10px;border-bottom:1px solid rgba(0,229,255,.2);
+  display:flex;align-items:center;gap:12px;margin-bottom:6px;
+}
+.phase-sub{font-size:12px;color:rgba(140,180,220,.5);letter-spacing:2px;font-family:'Orbitron',monospace;margin-bottom:18px;}
+
+/* TIMELINE EVENT */
+.event{
+  position:relative;
+  background:linear-gradient(140deg,rgba(7,26,62,.88) 0%,rgba(3,7,20,.94) 100%);
+  border:1px solid rgba(10,74,255,.2);
+  border-radius:12px;margin-bottom:12px;overflow:hidden;
+  animation:fadeUp .4s ease both;
+}
+.event-header{
+  padding:7px 16px;
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  border-bottom:1px solid rgba(255,255,255,.05);
+  font-family:'Orbitron',monospace;font-size:10px;letter-spacing:2px;
+}
+.event-time{color:var(--cyan);}
+.event-actors{color:rgba(200,220,255,.6);flex:1;text-align:center;}
+.event-type{padding:2px 10px;border-radius:20px;font-size:9px;white-space:nowrap;}
+.type-kill{background:rgba(255,59,59,.15);border:1px solid rgba(255,59,59,.3);color:var(--red);}
+.type-clash{background:rgba(255,140,0,.12);border:1px solid rgba(255,140,0,.3);color:var(--orange);}
+.type-domination{background:rgba(255,215,0,.1);border:1px solid rgba(255,215,0,.3);color:var(--gold);}
+.type-chaos{background:rgba(168,85,247,.12);border:1px solid rgba(168,85,247,.3);color:var(--purple);}
+.type-finale{background:rgba(0,229,255,.1);border:1px solid rgba(0,229,255,.3);color:var(--cyan);}
+
+.event-body{padding:14px 18px;}
+.event-body p{
+  font-size:14px;line-height:1.78;color:rgba(190,215,255,.72);
+}
+.event-body p em{color:var(--cyan);font-style:normal;font-weight:700;}
+.event-body p b{color:#fff;font-weight:700;}
+.event-body p .kill{color:var(--red);font-weight:700;}
+.event-body p .hype{color:var(--gold);font-weight:700;}
+.event-body p .trash{color:#ff6060;font-weight:700;}
+.event-body p .ghost{color:rgba(150,180,220,.45);font-style:italic;}
+
+/* ELIMINATED BANNER */
+.elim-banner{
+  display:flex;align-items:center;gap:10px;
+  background:rgba(255,59,59,.06);border:1px solid rgba(255,59,59,.2);
+  border-radius:8px;padding:8px 14px;margin-top:10px;
+}
+.elim-skull{font-size:18px;}
+.elim-text{font-family:'Orbitron',monospace;font-size:11px;color:var(--red);letter-spacing:1px;}
+.elim-sub{font-size:11px;color:rgba(255,120,120,.5);margin-top:1px;}
+
+.divider{height:1px;background:linear-gradient(90deg,transparent,rgba(0,229,255,.2),transparent);margin:40px 0;}
+
+/* SCOREBOARD inline */
+.scoreboard{
+  background:rgba(0,229,255,.03);border:1px solid rgba(0,229,255,.12);
+  border-radius:10px;padding:12px 16px;margin:16px 0;
+}
+.scoreboard-title{font-family:'Orbitron',monospace;font-size:10px;letter-spacing:3px;color:var(--cyan);margin-bottom:10px;opacity:.7;}
+.score-row{display:flex;align-items:center;justify-content:space-between;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.04);}
+.score-row:last-child{border-bottom:none;}
+.score-pos{font-family:'Orbitron',monospace;font-size:11px;color:rgba(150,180,220,.5);width:24px;}
+.score-name{font-size:13px;font-weight:700;flex:1;padding-left:8px;}
+.score-pts{font-family:'Orbitron',monospace;font-size:12px;color:var(--cyan);}
+.score-row.dead .score-name{color:rgba(255,80,80,.5);text-decoration:line-through;}
+.score-row.dead .score-pts{color:rgba(255,80,80,.4);}
+
+/* FINAL RANKING */
+.rank-card{
+  position:relative;
+  background:linear-gradient(140deg,rgba(7,26,62,.92) 0%,rgba(4,9,26,.97) 100%);
+  border-radius:14px;margin-bottom:16px;overflow:hidden;
+  animation:fadeUp .45s ease both;transition:transform .2s;
+}
+.rank-card:hover{transform:translateX(5px);}
+.rank-bar{position:absolute;left:0;top:0;bottom:0;width:4px;border-radius:14px 0 0 14px;}
+.r1 .rank-bar{background:linear-gradient(180deg,#ffd700,#f0a500);box-shadow:0 0 20px rgba(255,215,0,.8);}
+.r2 .rank-bar{background:linear-gradient(180deg,#e8e8e8,#999);box-shadow:0 0 12px rgba(192,192,192,.5);}
+.r3 .rank-bar{background:linear-gradient(180deg,#cd7f32,#8b4513);box-shadow:0 0 12px rgba(205,127,50,.5);}
+.r4 .rank-bar{background:var(--green);}
+.r5 .rank-bar,.r6 .rank-bar{background:var(--cyan);opacity:.5;}
+.r7 .rank-bar,.r8 .rank-bar{background:#0a4aff;opacity:.45;}
+.r9 .rank-bar,.r10 .rank-bar{background:var(--orange);opacity:.5;}
+.r11 .rank-bar,.r12 .rank-bar{background:var(--red);opacity:.55;}
+.r13 .rank-bar,.r14 .rank-bar{background:#660000;opacity:.7;}
+
+.rank-outline{position:absolute;inset:0;border-radius:14px;pointer-events:none;}
+.r1 .rank-outline{border:1px solid rgba(255,215,0,.4);}
+.r2 .rank-outline{border:1px solid rgba(192,192,192,.25);}
+.r3 .rank-outline{border:1px solid rgba(205,127,50,.3);}
+.r4 .rank-outline{border:1px solid rgba(0,255,136,.25);}
+.r5 .rank-outline,.r6 .rank-outline{border:1px solid rgba(0,229,255,.15);}
+.r7 .rank-outline,.r8 .rank-outline{border:1px solid rgba(10,74,255,.2);}
+.r9 .rank-outline,.r10 .rank-outline{border:1px solid rgba(255,140,0,.2);}
+.r11 .rank-outline,.r12 .rank-outline{border:1px solid rgba(255,59,59,.25);}
+.r13 .rank-outline,.r14 .rank-outline{border:1px solid rgba(120,0,0,.4);}
+
+.rank-inner{padding:16px 18px 16px 26px;}
+.rank-top{display:flex;align-items:flex-start;gap:14px;margin-bottom:12px;}
+.rbadge{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-family:'Orbitron',monospace;font-weight:900;font-size:16px;flex-shrink:0;margin-top:2px;}
+.r1 .rbadge{background:radial-gradient(circle,#ffd700,#b8860b);color:#000;box-shadow:0 0 22px rgba(255,215,0,.7);}
+.r2 .rbadge{background:radial-gradient(circle,#e8e8e8,#888);color:#000;box-shadow:0 0 14px rgba(192,192,192,.4);}
+.r3 .rbadge{background:radial-gradient(circle,#cd7f32,#7a4010);color:#fff;box-shadow:0 0 14px rgba(205,127,50,.4);}
+.r4 .rbadge{background:radial-gradient(circle,#00ff88,#00884a);color:#000;}
+.r5 .rbadge,.r6 .rbadge{background:rgba(0,229,255,.12);border:1px solid rgba(0,229,255,.3);color:rgba(180,230,255,.9);font-size:13px;}
+.r7 .rbadge,.r8 .rbadge{background:rgba(10,74,255,.18);border:1px solid rgba(10,74,255,.35);color:rgba(170,210,255,.8);font-size:13px;}
+.r9 .rbadge,.r10 .rbadge{background:rgba(255,140,0,.12);border:1px solid rgba(255,140,0,.35);color:var(--orange);font-size:13px;}
+.r11 .rbadge,.r12 .rbadge{background:rgba(255,59,59,.12);border:1px solid rgba(255,59,59,.35);color:var(--red);font-size:13px;}
+.r13 .rbadge,.r14 .rbadge{background:rgba(80,0,0,.3);border:1px solid rgba(180,0,0,.4);color:#ff6666;font-size:13px;}
+
+.rname-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:5px;}
+.rname{font-family:'Orbitron',monospace;font-weight:900;font-size:clamp(14px,3.8vw,19px);letter-spacing:1px;}
+.r1 .rname{color:var(--gold);text-shadow:0 0 18px rgba(255,215,0,.5);}
+.r2 .rname{color:var(--silver);}
+.r3 .rname{color:var(--bronze);}
+.r4 .rname{color:var(--green);}
+.r5 .rname,.r6 .rname{color:var(--cyan);}
+.r7 .rname,.r8 .rname{color:#7eb8ff;}
+.r9 .rname,.r10 .rname{color:var(--orange);}
+.r11 .rname,.r12 .rname{color:var(--red);}
+.r13 .rname,.r14 .rname{color:#ff4444;}
+
+.rtag{font-size:10px;padding:2px 9px;border-radius:20px;font-family:'Orbitron',monospace;letter-spacing:1px;white-space:nowrap;}
+.rtag-lv{background:rgba(0,229,255,.08);border:1px solid rgba(0,229,255,.25);color:var(--cyan);}
+.rtag-duo{background:rgba(255,45,120,.15);border:1px solid rgba(255,45,120,.4);color:var(--pink);}
+.rtag-pen{background:rgba(255,45,120,.1);border:1px solid rgba(255,45,120,.35);color:var(--pink);font-size:9px;}
+.rtag-new{background:rgba(0,255,136,.08);border:1px solid rgba(0,255,136,.3);color:var(--green);font-size:9px;}
+
+.win-pill{display:inline-block;background:rgba(0,255,136,.07);border:1px solid rgba(0,255,136,.22);
+  border-radius:6px;padding:3px 10px;font-family:'Orbitron',monospace;font-size:11px;
+  color:var(--green);letter-spacing:1px;margin-bottom:10px;}
+
+.rstory{font-size:13.5px;color:rgba(190,220,255,.72);line-height:1.78;
+  border-left:2px solid rgba(0,229,255,.15);padding-left:12px;margin-bottom:14px;}
+.rstory em{color:var(--cyan);font-style:normal;font-weight:700;}
+.rstory b{color:#fff;}
+.rstory .kill{color:var(--red);font-weight:700;}
+.rstory .hype{color:var(--gold);font-weight:700;}
+.rstory .trash{color:#ff6060;font-weight:700;}
+.rstory.clash{color:rgba(255,170,170,.7);border-left-color:rgba(255,59,59,.3);}
+.rstory.clash em{color:var(--red);}
+.rstory.roast{color:rgba(255,140,140,.65);border-left-color:rgba(180,0,0,.4);}
+.rstory.roast em{color:#ff4444;font-style:normal;font-weight:700;}
+
+.rstats{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:6px;}
+.rstat{background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.05);border-radius:7px;padding:5px 10px;}
+.rstat-l{font-size:9px;color:rgba(140,170,210,.5);letter-spacing:1px;text-transform:uppercase;margin-bottom:1px;}
+.rstat-v{font-size:13px;font-weight:700;color:#cde0ff;}
+.rstat-v.c{color:var(--cyan);}.rstat-v.g{color:var(--green);}.rstat-v.w{color:#ffaa00;}.rstat-v.r{color:var(--pink);}
+
+.trophy-row{display:flex;justify-content:center;gap:20px;flex-wrap:wrap;margin:24px 0;}
+.trophy-item{text-align:center;padding:14px 20px;border-radius:12px;min-width:120px;}
+.trophy-item.g{background:rgba(255,215,0,.08);border:1px solid rgba(255,215,0,.3);}
+.trophy-item.s{background:rgba(192,192,192,.06);border:1px solid rgba(192,192,192,.2);}
+.trophy-item.b{background:rgba(205,127,50,.07);border:1px solid rgba(205,127,50,.2);}
+.trophy-icon{font-size:28px;margin-bottom:6px;}
+.trophy-name{font-family:'Orbitron',monospace;font-size:13px;font-weight:700;}
+.trophy-item.g .trophy-name{color:var(--gold);}
+.trophy-item.s .trophy-name{color:var(--silver);}
+.trophy-item.b .trophy-name{color:var(--bronze);}
+.trophy-sub{font-size:11px;color:rgba(180,200,230,.5);margin-top:2px;}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+footer{text-align:center;margin-top:40px;font-size:10px;color:rgba(80,120,180,.3);letter-spacing:3px;text-transform:uppercase;}
+</style>
+</head>
+<body>
+<div class="container">
+
+<header>
+  <div class="game-label">Nebulous.io · Trick Mode</div>
+  <h1>THE SAVAGE<br>MÊLÉE</h1>
+  <div class="subtitle">14 duos · 1 map · 30 minutes · Seul le meilleur sauvage gagne</div>
+</header>
+
+<!-- INTRO -->
+<div class="event" style="border-color:rgba(0,229,255,.3);animation-delay:.02s">
+  <div class="event-header">
+    <span class="event-time">00:00</span>
+    <span class="event-actors">LANCEMENT DE LA PARTIE</span>
+    <span class="event-type type-chaos">DÉBUT</span>
+  </div>
+  <div class="event-body">
+    <p>La map s'ouvre. <b>14 duos</b> spawnnent aux quatre coins. Chacun avec son coéquipier anonyme — un inconnu qui va soit les porter soit les trahir. Le but est simple et brutal : <em>sauvager le plus longtemps possible, accumuler les kills, tenir jusqu'au bout.</em> La partie dure 30 minutes. Dans ce lobby il y a des légendes, des réguliers, des espoirs — et quelques joueurs qui ont rien à faire là. <span class="hype">Que le meilleur duo sauvage.</span></p>
+  </div>
+</div>
+
+<!-- PHASE 1 : 0-8 MIN -->
+<div class="phase-block">
+  <div class="phase-title"><span>⚡</span> 0 — 8 MINUTES · LE CHAOS INITIAL</div>
+  <div class="phase-sub">TOUT LE MONDE CHERCHE SA PLACE · LES FAIBLES SE RÉVÈLENT DÉJÀ</div>
+</div>
+
+<div class="event" style="animation-delay:.06s">
+  <div class="event-header">
+    <span class="event-time">00:47</span>
+    <span class="event-actors">Tashiro vs le reste de la map</span>
+    <span class="event-type type-kill">ÉLIMINATION RAPIDE</span>
+  </div>
+  <div class="event-body">
+    <p>Moins d'une minute. <b>Tashiro</b> spawn, essaie de grossir, se retrouve immédiatement dans le couloir de Near qui le voit depuis l'autre bout de la map. <span class="kill">Near le découpe en deux sans même ralentir.</span> Tashiro respawn, essaie encore, tombe cette fois sur le coéquipier de melo. <span class="trash">En 47 secondes Tashiro a déjà mourir deux fois.</span> Son coéquipier le regarde avec les yeux de quelqu'un qui réalise qu'il a tiré le mauvais numéro. <em>58 wins sur 28 000 parties — ça s'explique maintenant.</em></p>
+    <div class="elim-banner">
+      <span class="elim-skull">💀</span>
+      <div><div class="elim-text">TASHIRO ÉLIMINÉ — 00:47</div><div class="elim-sub">Dernier du classement · Dernier sorti · Cohérent jusqu'au bout</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="event" style="animation-delay:.09s">
+  <div class="event-header">
+    <span class="event-time">02:13</span>
+    <span class="event-actors">Wuchi grossit · map entière le surveille</span>
+    <span class="event-type type-clash">TENSION</span>
+  </div>
+  <div class="event-body">
+    <p><b>Wuchi</b> fait ce qu'il fait toujours — il grossit. Très vite. <em>Son score de masse grimpe, il commence à dominer sa zone.</em> Sur la map tout le monde le voit. toka, melo, Curse, Larasinne — ils savent tous exactement ce qui va se passer. Wuchi va devenir énorme, Wuchi va se croire intouchable, et Wuchi va se faire coordonner dessus. <span class="ghost">C'est le script. C'est toujours le même script.</span> Mais pour l'instant il grossit et son coéquipier essaie de suivre le rythme.</p>
+  </div>
+</div>
+
+<div class="event" style="animation-delay:.12s">
+  <div class="event-header">
+    <span class="event-time">03:31</span>
+    <span class="event-actors">Near vs ibo</span>
+    <span class="event-type type-clash">CLASH</span>
+  </div>
+  <div class="event-body">
+    <p>Premier vrai clash de niveau. <b>Near</b> le fragger rencontre <b>ibo</b> level 2391 dans le couloir central. Near attaque direct — c'est son style, rentrer dans le tas. <em>ibo tient.</em> Son level 2391 c'est pas juste du grind — il a de l'expérience. Les deux joueurs s'échangent des blobs pendant 90 secondes. <span class="hype">La map s'arrête presque pour regarder.</span> Near prend le dessus sur le duel individuel — son K/D le prouve — mais ibo appelle son coéquipier. Near se retrouve en 2v1. <span class="kill">Near perd la moitié de sa masse et doit fuir.</span> Premier recul de la partie.</p>
+  </div>
+</div>
+
+<div class="event" style="animation-delay:.15s">
+  <div class="event-header">
+    <span class="event-time">05:02</span>
+    <span class="event-actors">toka + melo · premiers sauvages propres</span>
+    <span class="event-type type-domination">DOMINATION</span>
+  </div>
+  <div class="event-body">
+    <p>Pendant que la map s'agite, <b>toka</b> et <b>melo</b> font leur jeu discrètement. Pas de frime, pas de show. <em>toka sauvage dans sa zone avec une précision chirurgicale</em> — chaque kill est utile, chaque blob mangé compte. melo de son côté s'installe dans le coin nord, son K/D parfait visible dans chaque duel. <span class="hype">Ces deux là ne font pas de bruit mais leur score monte.</span> Leurs coéquipiers anonymes font exactement ce qu'il faut — occuper l'espace, protéger les flancs. C'est du duo parfait.</p>
+  </div>
+</div>
+
+<div class="event" style="animation-delay:.18s">
+  <div class="event-header">
+    <span class="event-time">07:44</span>
+    <span class="event-actors">Wuchi au sommet · toka le surveille</span>
+    <span class="event-type type-domination">WUCHI PEAK</span>
+  </div>
+  <div class="event-body">
+    <p><b>Wuchi</b> atteint sa masse maximum. <em>Il domine visuellement un quart de la map.</em> Son coéquipier est à ses côtés. Dans le chat personne dit rien — mais tout le monde se repositionne. toka s'approche lentement par l'est. Larasinne par le sud. melo coupe la retraite vers le nord. <span class="hype">Wuchi est au sommet. Et il est encerclé.</span> Il le sait pas encore.</p>
+  </div>
+</div>
+
+<!-- SCOREBOARD 8 MIN -->
+<div class="scoreboard">
+  <div class="scoreboard-title">📊 CLASSEMENT PROVISOIRE — 8 MINUTES</div>
+  <div class="score-row"><span class="score-pos">1</span><span class="score-name" style="color:var(--gold)">toka</span><span class="score-pts">2 840 pts</span></div>
+  <div class="score-row"><span class="score-pos">2</span><span class="score-name" style="color:var(--silver)">melo</span><span class="score-pts">2 650 pts</span></div>
+  <div class="score-row"><span class="score-pos">3</span><span class="score-name" style="color:var(--bronze)">Curse</span><span class="score-pts">2 410 pts</span></div>
+  <div class="score-row"><span class="score-pos">4</span><span class="score-name">Larasinne</span><span class="score-pts">2 190 pts</span></div>
+  <div class="score-row"><span class="score-pos">5</span><span class="score-name">Wuchi</span><span class="score-pts">2 050 pts</span></div>
+  <div class="score-row"><span class="score-pos">6</span><span class="score-name">Tenza</span><span class="score-pts">1 940 pts</span></div>
+  <div class="score-row"><span class="score-pos">7</span><span class="score-name">athee</span><span class="score-pts">1 820 pts</span></div>
+  <div class="score-row"><span class="score-pos">8</span><span class="score-name">hypova</span><span class="score-pts">1 760 pts</span></div>
+  <div class="score-row"><span class="score-pos">9</span><span class="score-name">Why:(</span><span class="score-pts">1 680 pts</span></div>
+  <div class="score-row"><span class="score-pos">10</span><span class="score-name">⭐️</span><span class="score-pts">1 590 pts</span></div>
+  <div class="score-row"><span class="score-pos">11</span><span class="score-name">ibo</span><span class="score-pts">1 420 pts</span></div>
+  <div class="score-row"><span class="score-pos">12</span><span class="score-name">soli</span><span class="score-pts">1 310 pts</span></div>
+  <div class="score-row"><span class="score-pos">13</span><span class="score-name">Near</span><span class="score-pts">1 180 pts</span></div>
+  <div class="score-row dead"><span class="score-pos">14</span><span class="score-name">Tashiro</span><span class="score-pts">💀 MORT</span></div>
+</div>
+
+<!-- PHASE 2 : 8-18 MIN -->
+<div class="phase-block">
+  <div class="phase-title"><span>🔥</span> 8 — 18 MINUTES · LES GROS CLASHES</div>
+  <div class="phase-sub">LA MAP SE RÉDUIT · LES FAIBLES DISPARAISSENT · LES FORTS SE RÉVÈLENT</div>
+</div>
+
+<div class="event" style="animation-delay:.21s">
+  <div class="event-header">
+    <span class="event-time">08:55</span>
+    <span class="event-actors">toka + melo + Larasinne vs Wuchi</span>
+    <span class="event-type type-kill">COORDINATION TOTALE</span>
+  </div>
+  <div class="event-body">
+    <p>Le moment que tout le monde attendait. <b>toka</b> donne le signal. <b>melo</b> coupe par le nord. <b>Larasinne</b> pousse par le sud. Wuchi se retourne — trop tard. <em>Trois duos convergent sur lui simultanément.</em> Son coéquipier essaie de créer une diversion mais il est neutralisé en 10 secondes. <span class="hype">Wuchi se bat comme un lion</span> — son score de masse max de 43 000 c'est pas pour rien, il résiste 2 minutes entières. <span class="kill">Mais 3 contre 1 ça finit toujours pareil.</span> Wuchi explose. La map récupère ses blobs. <span class="trash">73 000 parties et il a encore pas compris qu'être gros seul sur une map avec 13 autres joueurs c'est un suicide.</span></p>
+    <div class="elim-banner">
+      <span class="elim-skull">💀</span>
+      <div><div class="elim-text">WUCHI ÉLIMINÉ — 08:55</div><div class="elim-sub">Masse max inutile · Coordonné dessus comme d'habitude · 218 wins expliquées</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="event" style="animation-delay:.24s">
+  <div class="event-header">
+    <span class="event-time">10:22</span>
+    <span class="event-actors">athee vs Tenza · clash de tricks</span>
+    <span class="event-type type-clash">SHOW TECHNIQUE</span>
+  </div>
+  <div class="event-body">
+    <p>Le plus beau moment de la partie. <b>athee</b> et <b>Tenza</b> se croisent dans la zone centrale — deux joueurs avec les tricks les plus élevés par partie du classement. <span class="hype">Ce qui se passe pendant les 3 minutes suivantes est quelque chose que les spectateurs vont raconter longtemps.</span> Split, contre-split, finte à gauche, disparaît, réapparaît par derrière. <em>athee sort 288 000 tricks de mémoire musculaire.</em> Tenza répond avec ses 308 000. <span class="hype">C'est du niveau que 90% des joueurs Nebulous voient jamais.</span> Les deux coéquipiers regardent sans intervenir — ils savent que c'est entre eux. Finalement athee prend un micro avantage — son expérience sur ce type de duel est supérieure. Tenza perd de la masse mais survit. <em>Respect mutuel. Ils repartent chacun de leur côté.</em></p>
+  </div>
+</div>
+
+<div class="event" style="animation-delay:.27s">
+  <div class="event-header">
+    <span class="event-time">11:50</span>
+    <span class="event-actors">Near · désespoir total</span>
+    <span class="event-type type-kill">ÉLIMINATION</span>
+  </div>
+  <div class="event-body">
+    <p><b>Near</b> a passé les 10 premières minutes à killer, à fragger, à faire des chiffres. <em>Mais la carte s'est resserrée</em> et ses points sont en dessous de ceux qui jouent pour gagner, pas juste pour tuer. Il se retrouve pris en sandwich entre Curse et ⭐️. Son coéquipier lâche sous la pression. <span class="kill">Near tient 45 secondes seul — son K/D le justifie — mais 2 contre 1 c'est 2 contre 1.</span> <span class="trash">Tu peux killer tout le monde en début de partie et quand même perdre parce que t'as pas sauvagé jusqu'au bout. Near vient de s'en souvenir.</span></p>
+    <div class="elim-banner">
+      <span class="elim-skull">💀</span>
+      <div><div class="elim-text">NEAR ÉLIMINÉ — 11:50</div><div class="elim-sub">Fragger sans endurance · 448 wins sur 116k parties · Le chiffre dit tout</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="event" style="animation-delay:.3s">
+  <div class="event-header">
+    <span class="event-time">13:15</span>
+    <span class="event-actors">soli · le vétéran qui tient plus</span>
+    <span class="event-type type-kill">ÉLIMINATION</span>
+  </div>
+  <div class="event-body">
+    <p><b>soli</b> level 1562 a survécu jusqu'ici en jouant safe, en évitant les clashes directs, en cherchant les petits kills faciles. <em>Sa stratégie de survie fonctionne un moment.</em> Mais à 13 minutes la map est trop petite pour se cacher. Larasinne le trouve dans le coin sud-est, son coéquipier coupe la sortie. soli se bat avec sa technique de vétéran — mais ses 398 victoires sur 70 000 parties prouvent que la technique sans l'instinct de gagner ça suffit pas. <span class="kill">Larasinne le ferme proprement.</span> <span class="trash">Level 1562. Éliminé avant la mi-partie. Le CV le plus embarrassant de cette mêlée.</span></p>
+    <div class="elim-banner">
+      <span class="elim-skull">💀</span>
+      <div><div class="elim-text">SOLI ÉLIMINÉ — 13:15</div><div class="elim-sub">Level 1562 pour finir 12ème · Merci pour la participation</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="event" style="animation-delay:.33s">
+  <div class="event-header">
+    <span class="event-time">14:40</span>
+    <span class="event-actors">Why:( · le joueur aux deux visages</span>
+    <span class="event-type type-chaos">CHAOS ORGANISÉ</span>
+  </div>
+  <div class="event-body">
+    <p><b>Why:(</b> a passé le début de partie à jouer en retrait — stratégique, économe. <em>Mais à 14 minutes il décide de tout lâcher.</em> Son style double-compte explose sur la map — il joue de façon tellement imprévisible que même les meilleurs ont du mal à le lire. <span class="hype">En 3 minutes il remonte 5 places au classement.</span> Il élimine ibo qui n'arrive pas à suivre le rythme, récupère la masse, distribue les rôles avec son coéquipier. La pénalité duo lui coûte des points sur le classement final — <em>mais dans la partie en temps réel il fait mal à tout le monde.</em></p>
+    <div class="elim-banner">
+      <span class="elim-skull">💀</span>
+      <div><div class="elim-text">IBO ÉLIMINÉ — 14:55</div><div class="elim-sub">Level 2391 · 251 wins · Tué par Why:( · Ironie maximale</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="event" style="animation-delay:.36s">
+  <div class="event-header">
+    <span class="event-time">16:30</span>
+    <span class="event-actors">hypova · le level qui sert à rien</span>
+    <span class="event-type type-kill">ÉLIMINATION</span>
+  </div>
+  <div class="event-body">
+    <p><b>hypova</b> level 2399 — le level le plus élevé de toute cette mêlée — <span class="trash">sort à 16 minutes sans avoir jamais vraiment existé dans cette partie.</span> Son K/D en dessous de 1 s'est confirmé sur la map : il perd plus qu'il mange, même dans cette situation. <em>⭐️ le trouve, le presse, son coéquipier coupe la route.</em> hypova essaie de splitter pour s'échapper — ça marche pas. <span class="kill">⭐️ récupère tout.</span> <span class="trash">285 000 parties pour finir 9ème dans une mêlée à 14. Le level c'est vraiment juste un chiffre.</span></p>
+    <div class="elim-banner">
+      <span class="elim-skull">💀</span>
+      <div><div class="elim-text">HYPOVA ÉLIMINÉ — 16:30</div><div class="elim-sub">LVL 2399 · K/D négatif · Le mystère du level sans skill</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- SCOREBOARD 18 MIN -->
+<div class="scoreboard">
+  <div class="scoreboard-title">📊 CLASSEMENT PROVISOIRE — 18 MINUTES</div>
+  <div class="score-row"><span class="score-pos">1</span><span class="score-name" style="color:var(--gold)">toka</span><span class="score-pts">7 920 pts</span></div>
+  <div class="score-row"><span class="score-pos">2</span><span class="score-name" style="color:var(--silver)">melo</span><span class="score-pts">7 440 pts</span></div>
+  <div class="score-row"><span class="score-pos">3</span><span class="score-name" style="color:var(--bronze)">Curse</span><span class="score-pts">6 990 pts</span></div>
+  <div class="score-row"><span class="score-pos">4</span><span class="score-name">Larasinne</span><span class="score-pts">6 610 pts</span></div>
+  <div class="score-row"><span class="score-pos">5</span><span class="score-name">Tenza</span><span class="score-pts">5 880 pts</span></div>
+  <div class="score-row"><span class="score-pos">6</span><span class="score-name">athee</span><span class="score-pts">5 540 pts</span></div>
+  <div class="score-row"><span class="score-pos">7</span><span class="score-name">⭐️</span><span class="score-pts">5 210 pts</span></div>
+  <div class="score-row"><span class="score-pos">8</span><span class="score-name">Why:(</span><span class="score-pts">4 950 pts</span></div>
+  <div class="score-row dead"><span class="score-pos">9</span><span class="score-name">hypova</span><span class="score-pts">💀 MORT</span></div>
+  <div class="score-row dead"><span class="score-pos">10</span><span class="score-name">ibo</span><span class="score-pts">💀 MORT</span></div>
+  <div class="score-row dead"><span class="score-pos">11</span><span class="score-name">soli</span><span class="score-pts">💀 MORT</span></div>
+  <div class="score-row dead"><span class="score-pos">12</span><span class="score-name">Near</span><span class="score-pts">💀 MORT</span></div>
+  <div class="score-row dead"><span class="score-pos">13</span><span class="score-name">Wuchi</span><span class="score-pts">💀 MORT</span></div>
+  <div class="score-row dead"><span class="score-pos">14</span><span class="score-name">Tashiro</span><span class="score-pts">💀 MORT</span></div>
+</div>
+
+<!-- PHASE 3 : 18-30 MIN -->
+<div class="phase-block">
+  <div class="phase-title"><span>👑</span> 18 — 30 MINUTES · LA GUERRE FINALE</div>
+  <div class="phase-sub">8 SURVIVANTS · CHAQUE KILL CHANGE TOUT · LE VRAI SAUVAGE COMMENCE</div>
+</div>
+
+<div class="event" style="animation-delay:.39s">
+  <div class="event-header">
+    <span class="event-time">19:08</span>
+    <span class="event-actors">Why:( vs ⭐️ · choc de styles</span>
+    <span class="event-type type-clash">CLASH ÉPIQUE</span>
+  </div>
+  <div class="event-body">
+    <p>La map est maintenant à 8 duos. <b>Why:(</b> imprévisible et <b>⭐️</b> chaotique se trouvent face à face. <span class="hype">Deux joueurs qui adorent le désordre dans un désordre encore plus grand.</span> <em>Why:( ouvre avec un trick que ⭐️ n'a jamais vu</em> — double split inversé, son style deux-comptes ressort. ⭐️ répond par l'instinct pur — 199 000 parties ça développe des réflexes que la technique peut pas anticiper. <span class="hype">5 minutes de duel pur.</span> Why:( finit par prendre le dessus — sa coordination avec son coéquipier est légèrement meilleure. <span class="kill">⭐️ perd trop de masse et doit décrocher.</span> Why:( avance.</p>
+  </div>
+</div>
+
+<div class="event" style="animation-delay:.42s">
+  <div class="event-header">
+    <span class="event-time">21:44</span>
+    <span class="event-actors">Curse élimine ⭐️ · le marathon gagne</span>
+    <span class="event-type type-kill">ÉLIMINATION</span>
+  </div>
+  <div class="event-body">
+    <p>Affaibli par le duel contre Why:(, <b>⭐️</b> tombe sur <b>Curse</b> qui a sauvagé proprement depuis le début. <em>1 247 victoires — Curse connaît exactement quoi faire d'un adversaire affaibli.</em> Il pousse fort, son coéquipier couvre, et en 90 secondes c'est terminé. ⭐️ sort dignement — il a tenu 21 minutes dans une mêlée à 14. <span class="hype">Respect mérité.</span> Curse continue à grimper.</p>
+    <div class="elim-banner">
+      <span class="elim-skull">💀</span>
+      <div><div class="elim-text">⭐️ ÉLIMINÉ — 21:44</div><div class="elim-sub">Beau parcours · 7ème place méritée</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="event" style="animation-delay:.45s">
+  <div class="event-header">
+    <span class="event-time">23:10</span>
+    <span class="event-actors">athee vs Larasinne · tricks vs expérience</span>
+    <span class="event-type type-clash">CLASH TECHNIQUE</span>
+  </div>
+  <div class="event-body">
+    <p>Le match que tout le classement attendait. <b>athee</b> le roi du trick contre <b>Larasinne</b> et ses 1 089 victoires. <em>athee sort tout ce qu'il a</em> — splits en chaîne, feintes multiples, son taux de tricks par partie explose. Larasinne résiste — elle a vu des athee dans 227 000 parties, elle sait que le trick roi finit toujours par prendre un risque de trop. <span class="hype">Elle attend. Elle attend encore.</span> À 24:30 athee fait le trick de trop — surjoue une finte, son coéquipier rate le timing. <span class="kill">Larasinne plonge dans la brèche.</span> athee se fait exploser. <em>La mécanique perd contre l'expérience.</em></p>
+    <div class="elim-banner">
+      <span class="elim-skull">💀</span>
+      <div><div class="elim-text">ATHEE ÉLIMINÉ — 24:33</div><div class="elim-sub">4ème place · Le meilleur mécaniquement · Pas le plus gagnant</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="event" style="animation-delay:.48s">
+  <div class="event-header">
+    <span class="event-time">25:20</span>
+    <span class="event-actors">Why:( · la pénalité qui fait mal</span>
+    <span class="event-type type-kill">ÉLIMINATION</span>
+  </div>
+  <div class="event-body">
+    <p><b>Why:(</b> est en pleine forme — il a survécu jusqu'ici, il a éliminé des adversaires sérieux. <em>Mais Tenza l'attend dans le couloir ouest.</em> Why:( joue son style imprévisible — ça marche pendant 3 minutes. Puis Tenza trouve le pattern. <span class="kill">En trick mode à ce niveau, l'imprévisibilité a des limites.</span> Tenza le lit, coordonne avec son coéquipier, et ferme le duel. Why:( sort. Sa pénalité duo va lui coûter des places au classement final — <span class="trash">la règle est là pour une raison Why:( et t'as joué avec le feu.</span></p>
+    <div class="elim-banner">
+      <span class="elim-skull">💀</span>
+      <div><div class="elim-text">WHY:( ÉLIMINÉ — 25:20</div><div class="elim-sub">5ème place brute · Pénalité appliquée au classement final</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="event" style="animation-delay:.51s">
+  <div class="event-header">
+    <span class="event-time">27:00</span>
+    <span class="event-actors">Tenza vs Larasinne · les derniers challengers</span>
+    <span class="event-type type-clash">DEMI-FINALE DE FAIT</span>
+  </div>
+  <div class="event-body">
+    <p>Il reste 4 duos. <b>toka</b> et <b>melo</b> sauvagent dans leurs zones, intouchables. <b>Tenza</b> et <b>Larasinne</b> se retrouvent dans le couloir central — le dernier match pour la 3ème place réelle. <em>Tenza joue offensif</em>, ses tricks sont là. Larasinne joue patient — <span class="hype">1 089 victoires ça apprend à pas paniquer.</span> Le duel dure 8 minutes entières. À 27 minutes Tenza prend un momentum — ses tricks par partie les plus élevés des newbies font la différence. <span class="kill">Larasinne perd son coéquipier d'abord, puis elle-même.</span> <em>Tenza est en position de podium.</em></p>
+    <div class="elim-banner">
+      <span class="elim-skull">💀</span>
+      <div><div class="elim-text">LARASINNE ÉLIMINÉE — 27:08</div><div class="elim-sub">Belle partie · 4ème place · Reviendra plus forte</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- FINALE -->
+<div class="divider"></div>
+<div class="phase-block">
+  <div class="phase-title" style="color:var(--gold)"><span>💀</span> 27 — 30 MINUTES · DERNIÈRE MINUTE DE FOLIE</div>
+  <div class="phase-sub" style="color:rgba(255,215,0,.4)">3 DUOS RESTANTS · toka · melo · Curse · Tenza</div>
+</div>
+
+<div class="event" style="animation-delay:.54s;border-color:rgba(255,140,0,.3);">
+  <div class="event-header" style="background:rgba(255,140,0,.05);">
+    <span class="event-time">27:45</span>
+    <span class="event-actors">Curse vs Tenza · la bataille pour le podium</span>
+    <span class="event-type type-domination">PODIUM EN JEU</span>
+  </div>
+  <div class="event-body">
+    <p><b>Curse</b> et ses <em>1 247 victoires</em> contre <b>Tenza</b> qui a tout donné pour arriver là. Curse joue comme une machine — métronome, régulier, implacable. <span class="hype">262 000 parties ça laisse des traces dans les réflexes.</span> Tenza résiste 4 minutes — son volume de tricks crée de la confusion. Mais Curse a vu mille Tenza. <span class="kill">À 28:30 Tenza se fait fermer.</span> Curse prend la 3ème place de cette mêlée.</p>
+    <div class="elim-banner">
+      <span class="elim-skull">💀</span>
+      <div><div class="elim-text">TENZA ÉLIMINÉ — 28:30</div><div class="elim-sub">3ème place pour Curse · Beau parcours Tenza</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="event" style="animation-delay:.57s;border-color:rgba(255,215,0,.35);">
+  <div class="event-header" style="background:rgba(255,215,0,.06);border-bottom-color:rgba(255,215,0,.15);">
+    <span class="event-time" style="color:var(--gold)">28:30 → 30:00</span>
+    <span class="event-actors" style="color:var(--gold)">toka vs melo · LA GRANDE FINALE</span>
+    <span class="event-type type-finale">FINALE ABSOLUE</span>
+  </div>
+  <div class="event-body">
+    <p><span class="hype">LE MOMENT. toka vs melo. Le meilleur win rate du classement contre le meilleur K/D.</span> 1 227 victoires contre 884. Un duel que les stats annonçaient depuis le début de cette mêlée. <em>90 secondes restantes sur le chrono.</em></p>
+    <p style="margin-top:10px">Les deux joueurs se cherchent depuis 5 minutes déjà — ils savent que c'est entre eux. Curse a été éliminé, la map leur appartient. <b>toka ouvre prudemment</b>, son coéquipier fait écran. melo répond par son instinct pur — son K/D c'est pas de la chance c'est <em>de la science du duel</em>. <span class="hype">1 minute 30 de battle absolue. Chaque blob mangé, chaque split compte.</span></p>
+    <p style="margin-top:10px">À 29:20 toka crée un écart. <em>Son expérience de 1 227 parties gagnées se manifeste dans un seul mouvement</em> — il lit le trick de melo une demi-seconde avant que melo le joue. Son coéquipier ferme la sortie. <span class="hype">Les 40 dernières secondes toka sauvage en roi absolu.</span> Le chrono tombe à zéro.</p>
+    <p style="margin-top:10px;color:var(--gold);font-weight:700;font-size:15px;font-family:'Orbitron',monospace;letter-spacing:1px;">🏆 TOKA GAGNE LA MÊLÉE. CHAMPION INCONTESTÉ.</p>
+  </div>
+</div>
+
+<div class="trophy-row">
+  <div class="trophy-item g"><div class="trophy-icon">🥇</div><div class="trophy-name">toka</div><div class="trophy-sub">CHAMPION · 1 227 WINS</div></div>
+  <div class="trophy-item s"><div class="trophy-icon">🥈</div><div class="trophy-name">melo</div><div class="trophy-sub">FINALISTE · K/D #1</div></div>
+  <div class="trophy-item b"><div class="trophy-icon">🥉</div><div class="trophy-name">Curse</div><div class="trophy-sub">3ÈME · 1 247 WINS</div></div>
+</div>
+
+<div class="divider"></div>
+
+<!-- CLASSEMENT FINAL -->
+<div class="phase-title"><span>📋</span> CLASSEMENT FINAL OFFICIEL</div>
+
+<div id="ranking"></div>
+
+<footer>NEBULOUS · TRICK MODE · THE SAVAGE MÊLÉE · CLASSEMENT OFFICIEL</footer>
+</div>
+
+<script>
+const players=[
+  {rank:1,css:"r1",name:"toka",levels:"LVL 1075",duo:false,pen:false,isNew:false,
+   wins:1227,games:182496,eaten:33257984,lost:31184102,tricks:208939,
+   sc:"",
+   story:`<b>toka</b> est Champion et c'est la conclusion logique de tout ce classement. <em>1 227 victoires. Le meilleur win rate. Le meilleur sauvageur de cette mêlée.</em> Il a joué 30 minutes comme il joue toujours — sans panique, sans frime, avec une précision qui donne froid dans le dos. Chaque kill était mérité, chaque moment de la partie était maîtrisé. <span class="hype">toka c'est pas juste le meilleur de cette mêlée — c'est le standard que tout le monde dans ce classement devrait viser.</span> Couronne méritée. Discussion fermée.`},
+  {rank:2,css:"r2",name:"melo",levels:"LVL 825",duo:false,pen:false,isNew:false,
+   wins:884,games:184399,eaten:22923778,lost:19783959,tricks:172803,
+   sc:"",
+   story:`<b>melo</b>. Level 825. Finaliste. <em>Meilleur K/D du classement entier.</em> Ce joueur est une anomalie que la communauté Nebulous devrait étudier. Il arrive dans une mêlée à 14 joueurs avec le level le plus bas — et il finit 2ème. <span class="hype">Pas grâce à son level. Pas grâce à ses stats de grind. Grâce à ses mains et son cerveau.</span> melo joue pour gagner depuis le premier blob jusqu'au dernier. Le jour où il grind son level ce classement va tremblerr.`},
+  {rank:3,css:"r3",name:"Curse",levels:"LVL 1491",duo:false,pen:false,isNew:false,
+   wins:1247,games:262614,eaten:30323386,lost:28438482,tricks:198275,
+   sc:"",
+   story:`<b>Curse</b> — <em>1 247 victoires, le record absolu de ce classement.</em> Sur le pur volume de wins c'est lui le numéro 1. Sa 3ème place dans cette mêlée reflète une constance absolue sur 30 minutes — il a sauvagé sans jamais dévier, sans jamais paniquer. <span class="hype">262 000 parties ça forge quelque chose que les autres ont pas.</span> Podium amplement mérité.`},
+  {rank:4,css:"r4",name:"Larasinne",levels:"LVL 1556",duo:false,pen:false,isNew:true,
+   wins:1089,games:227870,eaten:24099263,lost:22490447,tricks:282279,
+   sc:"",
+   story:`<b>Larasinne</b> débarque dans ce classement et finit <em>4ème d'une mêlée à 14</em> avec 1 089 victoires et une expérience de 227 000 parties. Elle a tenu jusqu'à la dernière ligne droite et c'est Tenza qui l'a sortie dans un duel serré. <span class="hype">Sa présence dans ce classement change l'équilibre — elle est là pour durer.</span>`},
+  {rank:5,css:"r5",name:"Tenza",levels:"LVL 1983",duo:false,pen:false,isNew:true,
+   wins:757,games:221473,eaten:36833570,lost:36118959,tricks:308189,
+   sc:"",
+   story:`<b>Tenza</b> — 5ème place, meilleur volume de tricks par partie des nouveaux. Sa mêlée était spectaculaire — il a battu Why:(, tenu contre Larasinne, failli avoir Curse. <em>757 victoires sur 221 000 parties</em> c'est un niveau réel. <span class="hype">Il manque juste ce petit quelque chose pour passer du top 5 au podium.</span> Il va revenir.`},
+  {rank:6,css:"r6",name:"athee",levels:"LVL 1125",duo:false,pen:false,isNew:false,
+   wins:640,games:116374,eaten:19983388,lost:19195934,tricks:288474,
+   sc:"",
+   story:`<b>athee</b> — le roi du trick, 6ème place. Son clash contre Tenza était le plus beau moment technique de la mêlée entière. <em>Sa mécanique est au niveau des meilleurs</em> — c'est son intelligence tactique qui lui manque pour fermer les parties. <span class="hype">Avec son volume de tricks aucun joueur de ce classement est plus dangereux en duel individuel.</span> Il doit juste apprendre à sauvager jusqu'au bout.`},
+  {rank:7,css:"r7",name:"⭐️",levels:"LVL 1331",duo:false,pen:false,isNew:false,
+   wins:798,games:199062,eaten:13676205,lost:13389245,tricks:174168,
+   sc:"",
+   story:`<b>⭐️</b> — 7ème, 199 000 parties, 798 victoires. L'étoile qui joue dans le chaos et qui survit plus longtemps que la plupart. <em>Sa défaite contre Why:( puis Curse en fin de partie</em> lui a coûté le podium mais pas l'honneur. <span class="hype">L'étoile dans le pseudo ça se mérite — et lui l'a mérité.</span>`},
+  {rank:8,css:"r8",name:"Why:(",levels:"LVL 1201+1428",duo:true,pen:true,isNew:false,
+   wins:1102,games:189619,eaten:28828170,lost:26846632,tricks:375389,
+   sc:"",
+   story:`<b>Why:(</b> — 8ème avec pénalité. Sans ses deux comptes il serait peut-être 5ème ou 6ème. Mais <em>les règles sont les règles</em> et jouer sur deux comptes c'est un avantage que le classement doit corriger. Son talent est indéniable — <span class="hype">1 102 victoires combinées, un style imprévisible que personne peut vraiment lire.</span> La pénalité fait mal mais c'est juste.`},
+  {rank:9,css:"r9",name:"hypova",levels:"LVL 2399",duo:false,pen:false,isNew:true,
+   wins:880,games:285962,eaten:22869076,lost:23337869,tricks:235124,
+   sc:"warn",
+   story:`<b>hypova</b> — level 2399, le plus haut de tout ce classement. <span class="trash">9ème place.</span> Le constat est brutal : son K/D est négatif — il perd plus qu'il mange. Sur 285 000 parties c'est pas une coïncidence, c'est une habitude. <em>880 victoires c'est honnête</em> mais pour quelqu'un à ce level c'est décevant. <span class="trash">Le level c'est impressionnant dans le profil. Dans la mêlée ça compte pour du beurre.</span>`},
+  {rank:10,css:"r10",name:"ibo",levels:"LVL 2391",duo:false,pen:false,isNew:true,
+   wins:251,games:71431,eaten:6343432,lost:5927264,tricks:58329,
+   sc:"clash",
+   story:`<b>ibo</b>. Level 2391. <em>251 victoires.</em> <span class="trash">Tué par Why:( à 15 minutes dans une mêlée générale.</span> Le deuxième level le plus élevé du classement et l'un des pires win rates. ibo passe plus de temps à grinder son XP qu'à apprendre à sauvager. <span class="trash">Le jour où tu comprendras que le level c'est pas le skill, peut-être que tu passeras le cap des 251 victoires. Peut-être.</span>`},
+  {rank:11,css:"r11",name:"soli",levels:"LVL 1562",duo:false,pen:false,isNew:false,
+   wins:398,games:70621,eaten:8864650,lost:8718368,tricks:73774,
+   sc:"clash",
+   story:`<b>soli</b>. Level 1562 — <em>le level le plus élevé des anciens</em> — éliminé à 13 minutes. <span class="trash">398 victoires sur 70 000 parties avec le level le plus haut du groupe originel. C'est le ratio le plus honteux de ce classement.</span> soli joue depuis des années, a accumulé plus d'XP que tout le monde ici, et gagne moins que des joueurs deux fois moins levelés. <span class="trash">Le level c'est ton seul argument et il tient plus depuis longtemps.</span>`},
+  {rank:12,css:"r12",name:"Near",levels:"LVL 1091",duo:false,pen:false,isNew:false,
+   wins:448,games:116094,eaten:20259523,lost:18821243,tricks:128574,
+   sc:"clash",
+   story:`<b>Near</b>. Le fragger éternel qui gagne pas. <span class="trash">116 000 parties et 448 victoires — t'as passé plus de temps à mourir qu'à sauvager.</span> Ton K/D est correct, tes tricks sont là, tu sais te battre — <em>mais sauvager c'est tenir 30 minutes, pas juste les 10 premières.</em> <span class="trash">T'es le type qui fait le meilleur début de partie et finit dans le bas du classement. C'est presque un talent.</span>`},
+  {rank:13,css:"r13",name:"Wuchi",levels:"LVL 1443",duo:false,pen:false,isNew:false,
+   wins:218,games:73801,eaten:10970779,lost:10378664,tricks:107763,
+   sc:"roast",
+   story:`<b>Wuchi</b>. 73 801 parties. <em>218 victoires.</em> <span class="trash">On va même pas faire semblant que c'est acceptable. C'est pas un mauvais passage de forme — c'est un mode de vie. Tu grossis, tu te crois seul au monde, et tu te fais coordonner dessus comme si t'avais une cible dans le dos. 73 000 fois.</span> Ton score de masse max de 43 000 c'est la blague la plus cruelle de ce classement — tu peux dominer la map et quand même perdre chaque partie. <span class="trash">C'est presque un don. Un don pour perdre.</span>`},
+  {rank:14,css:"r14",name:"Tashiro",levels:"LVL 1082",duo:false,pen:false,isNew:false,
+   wins:58,games:28791,eaten:5474464,lost:5168780,tricks:19647,
+   sc:"roast",
+   story:`<b>Tashiro</b>. Dernier. <em>58 victoires sur 28 791 parties.</em> <span class="trash">Éliminé en 47 secondes dans cette mêlée — un record absolu de honte. Même Wuchi a tenu 8 minutes. Toi t'as pas survécu à la première minute.</span> 58 wins c'est le score que tu fais quand tu joues en dormant, en regardant ailleurs, en te demandant ce que tu fais de ta vie. <span class="trash">Dans ce classement t'es pas le dernier par accident — t'es le dernier par vocation. Par passion du néant. Par amour de la défaite.</span> Reviens quand t'as compris que sauvager ça veut dire survivre plus de 47 secondes.`},
+];
+
+function fmt(n){if(n>=1e6)return(n/1e6).toFixed(2)+'M';if(n>=1e3)return(n/1e3).toFixed(1)+'k';return n.toLocaleString();}
+
+const container=document.getElementById('ranking');
+players.forEach((p,i)=>{
+  const wr=(p.wins/p.games*100).toFixed(3)+'%';
+  const kd=(p.eaten/p.lost).toFixed(4);
+  const tpg=(p.tricks/p.games).toFixed(2);
+  const kdC=parseFloat(kd)>=1.10?'g':parseFloat(kd)>=1.04?'c':'w';
+  const wrC=parseFloat(p.wins/p.games)>=0.007?'g':parseFloat(p.wins/p.games)>=0.004?'c':'w';
+  const tpgC=parseFloat(tpg)>=1.5?'g':parseFloat(tpg)>=1.0?'c':'w';
+  const card=document.createElement('div');
+  card.className=`rank-card ${p.css}`;
+  card.style.animationDelay=`${i*0.06}s`;
+  card.innerHTML=`
+    <div class="rank-bar"></div><div class="rank-outline"></div>
+    <div class="rank-inner">
+      <div class="rank-top">
+        <div class="rbadge">${p.rank}</div>
+        <div style="flex:1;min-width:0;">
+          <div class="rname-row">
+            <span class="rname">${p.name}</span>
+            <span class="rtag rtag-lv">${p.levels}</span>
+            ${p.duo?'<span class="rtag rtag-duo">2 COMPTES</span>':''}
+            ${p.pen?'<span class="rtag rtag-pen">PÉNALITÉ</span>':''}
+            ${p.isNew?'<span class="rtag rtag-new">NOUVEAU</span>':''}
+          </div>
+          <div class="win-pill">🏆 ${p.wins.toLocaleString()} WINS · ${fmt(p.games)} PARTIES</div>
+        </div>
+      </div>
+      <div class="rstory ${p.sc}">${p.story}</div>
+      <div class="rstats">
+        <div class="rstat"><div class="rstat-l">Win Rate</div><div class="rstat-v ${wrC}">${wr}</div></div>
+        <div class="rstat"><div class="rstat-l">K/D Ratio</div><div class="rstat-v ${kdC}">${kd}</div></div>
+        <div class="rstat"><div class="rstat-l">Tricks/Partie</div><div class="rstat-v ${tpgC}">${tpg}</div></div>
+        <div class="rstat"><div class="rstat-l">Victoires</div><div class="rstat-v g">${p.wins.toLocaleString()}</div></div>
+        <div class="rstat"><div class="rstat-l">Parties</div><div class="rstat-v">${fmt(p.games)}</div></div>
+      </div>
+    </div>`;
+    container.appendChild(card);
+});
+</script>
+
+<div class="trophy-row">
+  <div class="trophy-item g">
+    <div class="trophy-icon">🥇</div>
+    <div class="trophy-name">toka</div>
+    <div class="trophy-sub">CHAMPION · 1 227 WINS</div>
+  </div>
+</div>
+
+<footer>NEBULOUS.IO · SAVAGE MÊLÉE MANAGEMENT SYSTEM</footer>
+</body>
+</html>
+HTMLEOF
+echo "done"
